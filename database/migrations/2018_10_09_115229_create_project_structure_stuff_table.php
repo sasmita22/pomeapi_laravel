@@ -17,7 +17,7 @@ class CreateProjectStructureStuffTable extends Migration
             $table->integer('id_project_structure')->unsigned();
             $table->string('staff',10);
             $table->primary(array('id_project_structure','staff'));
-
+            $table->tinyInteger('leader');
             $table->foreign('id_project_structure')->references('id')->on('project_structures');
             $table->foreign('staff')->references('nip')->on('staff');
         });

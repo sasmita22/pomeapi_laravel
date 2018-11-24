@@ -15,7 +15,6 @@ class CreateStaffTable extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->string('nip',10)->primary();
-            $table->tinyInteger('leader');
             $table->string('name',50);
             $table->string('email')->unique();
             $table->string('image')->nullable();
