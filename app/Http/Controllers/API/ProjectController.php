@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Project;
@@ -114,16 +115,13 @@ class ProjectController extends Controller
     public function show($id_project)
     {
         $project = Project::where('id_project',$id_project)->firstOrFail();
+        $pm = DB::table("staff")->where('nip',$project->project_manager)->get();
+        $project->pm = $pm[0];
         $project->view_project = [
-            'href' => 'api/v1/project',
+            'href' => 'api/project/{id_project}/',
             'method' => 'GET'
         ];
-
-        $response = [
-            'msg' => 'Project information',
-            'project' => $project
-        ];
-        return response()->json($response,200);
+        return response()->json($project,200);
     }
 
     public function getProjectByNip($nip)
@@ -134,12 +132,9 @@ class ProjectController extends Controller
             'method' => 'GET'
         ];
 
-        $response = [
-            'msg' => 'Project information',
-            'project' => $project
-        ];
-        return response()->json($response,200);
-    }    
+    
+        return response()->json($project,200);
+    }   
 
     /**
      * Show the form for editing the specified resource.

@@ -188,6 +188,45 @@ class TaskController extends Controller
         return response()->json($response,200);
     }
 
+    public function statusDone($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->status = 1;
+        if(!$task->update()){
+            return response()->json([
+                'msg' => 'Error during update'
+            ],404);
+        }
+
+        $response = [
+            'msg' => 'Task status Done',
+            'task' => $task
+        ];
+
+        return response()->json($response,200);
+    }
+
+    public function statusUndone($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->status = 0;
+        if(!$task->update()){
+            return response()->json([
+                'msg' => 'Error during update'
+            ],404);
+        }
+
+
+        $response = [
+            'msg' => 'Task status Undone',
+            'task' => $task
+        ];
+
+        return response()->json($response,200);
+    }    
+
+
+
     /**
      * Remove the specified resource from storage.
      *

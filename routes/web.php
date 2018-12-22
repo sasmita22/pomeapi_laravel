@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/', function () {
+    return view('welcome');
+});
+
 Route::get('/step', function () {
     $staff = App\Staff::join('projects','projects.project_manager','=','staff.nip')
     ->join('project_structures','project_structures.id_project','=','projects.id_project')

@@ -18,11 +18,15 @@ class UserController extends Controller
     public function login(){
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             $user = Auth::user();
+            $success['nip'] = $user->nip;
+            $success['name'] = $user->name;
+            $success['email'] = $user->email;            
             $success['token'] =  $user->createToken('nApp')->accessToken;
-            return response()->json(['success' => $success], $this->successStatus);
+            $success['status'] = true;
+            return response()->json($success, $this->successStatus);
         }
         else{
-            return response()->json(['error'=>'Unauthorised'], 401);
+            return response()->json(['status'=>false], 401);
         }
     }
 
@@ -32,7 +36,6 @@ class UserController extends Controller
             'nip' => 'required|string|max:10|unique:staff',
             'name' => 'required|string',
             'email' => 'required|string|email|unique:staff',
-            'leader' => 'required',
             'password' => 'required',           
             'c_password' => 'required|same:password',
         ]);
