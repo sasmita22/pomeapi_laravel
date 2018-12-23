@@ -30,7 +30,8 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::get('task/nip/{nip}', 'API\TaskController@getTaskByNip');
 
 	Route::get('staff/{nip}', 'API\StaffController@show');
-	
+	Route::get('step/project/{id_project}/step/{id_step}', 'API\StepController@getDetailStep');
+	Route::get('tasks/project/{id_project}/step/{id_step}', 'API\TaskController@getTasks');
 	Route::get('task/project_structure/{id}', 'API\TaskController@getTaskByProjectStructure');
 	Route::resource('task','API\TaskController',[
 		'except' => ['create','edit']

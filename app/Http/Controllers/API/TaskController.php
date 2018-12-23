@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Task;
@@ -286,4 +287,18 @@ class TaskController extends Controller
         ];
         return response()->json($response,200);
     }    
+
+    public function getTasks($id_project,$id_step){
+        $tasks = DB::table('tasks as t')
+            ->where('project_structure',
+                (DB::table('project_structures as ps')
+                ->where('ps.id_project',$id_project)
+                ->where('ps.step',$id_step)
+                ->get(['ps.id']))[0]->id
+            )
+            ->get();
+
+
+        return response()->json($tasks,200);
+    }
 }

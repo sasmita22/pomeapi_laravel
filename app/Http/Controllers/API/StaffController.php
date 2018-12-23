@@ -65,8 +65,9 @@ class StaffController extends Controller
                 $classStep = new \stdClass();
     
     
-                $arrayStep = DB::table('steps')
-                ->where("id",$s->step)
+                $arrayStep = DB::table('steps as s')
+                ->join("project_structures as ps","ps.step","s.id")
+                ->where("s.id",$s->step)
                 ->get();
 
                 $arrayTeam = DB::table('staff')
@@ -92,6 +93,7 @@ class StaffController extends Controller
     
                 $classStep->id = $arrayStep[0]->id;
                 $classStep->name = $arrayStep[0]->name;
+                $classStep->deskripsi = $arrayStep[0]->deskripsi;
                 $classStep->deadline_at = $arrayStep[0]->deadline_at;
                 $classStep->ended_at = $arrayStep[0]->ended_at;
                 $classStep->team = $arrayTeam;
