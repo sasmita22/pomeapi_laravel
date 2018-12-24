@@ -44,9 +44,9 @@ class StaffController extends Controller
             $objProject->name = $project[0]->projectname;
             $objProject->image = $project[0]->image;
             $objProject->project_manager = $project[0]->project_manager;
-            $objProject->start_at = $this->changeDateFormat($project[0]->start_at);
-            $objProject->deadline_at = $this->changeDateFormat($project[0]->deadline_at);
-            $objProject->ended_at = $this->changeDateFormat($project[0]->ended_at);
+            $objProject->start_at = $project[0]->start_at;
+            $objProject->deadline_at = $project[0]->deadline_at;
+            $objProject->ended_at = $project[0]->ended_at;
             $objProject->position_id = -1;
     
             if($project[0]->nip_pm == $id){
@@ -169,14 +169,14 @@ class StaffController extends Controller
             $step = DB::table('project_structures as ps')
             ->join('steps as st','st.id','ps.step')
             ->where('ps.id',$value->id)
-            ->get();
+            ->get(['st.id','st.name','ps.deskripsi','ps.deadline_at','ps.ended_at']);
             
             
             $objStep->id = $step[0]->id;
             $objStep->name = $step[0]->name;
             $objStep->deskripsi = $step[0]->deskripsi;
-            $objStep->deadline_at = $step[0]->deadline_at;
-            $objStep->ended_at = $step[0]->ended_at;
+            $objStep->deadline_at = date("d-m-Y", strtotime($step[0]->deadline_at));
+            $objStep->ended_at = date("d-m-Y", strtotime($step[0]->ended_at));
     
     
             $queryTask = DB::table('project_structures as ps')
@@ -224,7 +224,7 @@ class StaffController extends Controller
         //return response()->json($query,200);
     }
 
-    public function show($nip)
+    public function getStaff($nip)
     {
         $staff = Staff::where('nip',$nip)->firstOrFail();
         
