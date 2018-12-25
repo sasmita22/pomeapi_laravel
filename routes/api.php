@@ -29,6 +29,10 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::get('step/project/{id_project}/step/{id_step}', 'API\StepController@getDetailStep');
 	Route::get('tasks/project/{id_project}/step/{id_step}', 'API\TaskController@getTasks');
 	Route::get('task/{id}','API\TaskController@getTask');
+	Route::get('dashboard/staff/{nip}','API\TaskController@getDashboardStaff');
+	Route::get('dashboard/leader/{nip}','API\TaskController@getDashboardLeader');
+	Route::get('dashboard/manager/{nip}','API\TaskController@getDashboardManager');
+	
 	
 	Route::patch('task/statusDone/{id}','API\TaskController@statusDone');
 	Route::patch('task/statusUndone/{id}','API\TaskController@statusUndone');

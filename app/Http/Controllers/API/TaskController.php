@@ -78,4 +78,44 @@ class TaskController extends Controller
 
         return response()->json($tasks,200);
     }
+
+    public function getDashboardStaff($nip){
+        $task = DB::table('tasks as t')
+            ->join('staff as st','t.handled_by','st.nip')
+            ->join('project_structures as ps','t.project_structure','ps.id')
+            ->join('steps as s','s.id','ps.step')
+            ->join('projects as p','ps.id_project','p.id_project')
+            ->where('st.nip',$nip)
+            ->orderBy('t.deadline_at','asc')
+            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
+
+        return response()->json($task,200);
+    }
+
+    public function getDashboardLeader($nip){
+        $task = DB::table('tasks as t')
+            ->join('project_structures as ps','t.project_structure','ps.id')
+            ->join('staff as st','ps.leader','st.nip')
+            ->join('steps as s','s.id','ps.step')
+            ->join('projects as p','ps.id_project','p.id_project')
+            ->where('st.nip',$nip)
+            ->orderBy('t.deadline_at','asc')
+            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
+
+        return response()->json($task,200);
+    }
+
+    public function getDashboardManager($nip){
+        $task = DB::table('tasks as t')
+            ->join('project_structures as ps','t.project_structure','ps.id')
+            ->join('steps as s','s.id','ps.step')
+            ->join('projects as p','ps.id_project','p.id_project')
+            ->join('staff as st','p.project_manager','st.nip')
+            ->where('st.nip',$nip)
+            ->orderBy('t.deadline_at','asc')
+            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
+
+        return response()->json($task,200);
+    }
+
 }
