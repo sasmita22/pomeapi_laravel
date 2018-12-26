@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
 
+
 Route::group(['middleware' => 'auth:api'], function(){
 	Route::post('details', 'API\UserController@details');
 	Route::get('project/{id_project}', 'API\ProjectController@getProjectDetail');
@@ -41,7 +42,17 @@ Route::group(['middleware' => 'auth:api'], function(){
 	Route::get('projects/{id}','API\StaffController@getHirarkiProject');
 	Route::get('staff/chooseLeader/{id}','API\StaffController@chooseLeader');
 	Route::get('staff/getStaffOnStep/{id_project}/{id_staff}','API\StaffController@getStaffOnStep');
-	Route::get('project/getHirarkiStep/{id_project}','API\StaffController@getHirarkiStep');	
+	Route::get('project/getHirarkiStep/{id_project}','API\StaffController@getHirarkiStep');
+	
+	//--------------------------------Baru--------------------------------------
+	Route::post('task/setAddTeam/{project}/{step}','API\TaskController@setAddTeam');
+	Route::get('task/penanggungJawabTask/project/{id_project}/step/{id_step}','API\TaskController@getPenanggungJawabTask');
+	Route::patch('project/setLeaderProjectStructure/{project}/{step}','API\TaskController@setLeaderProjectStructure');
+	Route::patch('task/setPenanggungJawabTask/{id}/','API\TaskController@setPenanggungJawabTask');
+	Route::get('task/getStaffForTeam/{project}/{step}/','API\TaskController@getStaffForTeam');
+	Route::get('task/progressStep/{project}/{step}','API\TaskController@progressStep');
+	Route::get('task/progressProject/{project}','API\TaskController@progressProject');
+	Route::get('staff/getStaffForLeaderOrTeam/{id}','API\TaskController@getStaffForLeaderOrTeam');
 
 });
 

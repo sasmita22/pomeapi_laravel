@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectStructure extends Model
+class ProjectStructureStaff extends Model
 {
-    protected $table = 'project_structures';
-    protected $primaryKey = 'id';
+    protected $table = 'project_structure_staff';
+    protected $primaryKey = 'id_project_structure';
     public $timestamps = false;
 
 
@@ -17,14 +17,7 @@ class ProjectStructure extends Model
      * @var array
      */
     protected $fillable = [
-		'id',
-    'id_project',
-    'step',
-    'leader',
-    'deskripsi',
-    'deadline_at',
-    'ended_at'
+	    'id_project_structure',
+        'staff'
     ];  
-
-
 }
