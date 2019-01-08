@@ -18,9 +18,9 @@ class Step extends Model
      */
     protected $fillable = [
 		'id',
-		'name',
-		'deadline_at',
-		'ended_at'
+        'name',
+        'deskripsi',
+		'type',
     ];  
 
 

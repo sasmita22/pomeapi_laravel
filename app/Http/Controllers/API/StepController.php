@@ -9,6 +9,50 @@ use App\Step;
 
 class StepController extends Controller
 {
+    public function createStep(Request $request)
+    {
+        $this->validate($request,[
+            'name' => 'required',
+            'deskripsi' => 'required',
+            'type' => 'required',
+
+        ]);
+        
+
+
+        $name = $request->input('name');
+        $deskripsi = $request->input('deskripsi');
+        $type = $request->input('type');
+
+
+        $step = new Step([
+            'name' => $name,
+            'deskripsi' => $deskripsi,
+            'type' => $type,
+
+        ]);
+
+        if($step->save()){
+            $step->step = [
+                'href' => 'api/step/'.$step->id,
+                'method' => 'GET'
+            ];
+
+            $message = [
+                'msg' => 'step created',
+                'step' => $step
+            ];
+            return response()->json($message,201);
+        }
+
+        $response = [
+            'msg' => 'Error during creation',
+        ];
+
+        return response()->json($response,404);
+    }
+
+
 
     public function getDetailStep($id_project,$id_step){
         $step = DB::table('project_structures as ps')

@@ -7,116 +7,142 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 use App\Staff;
+use carbon\Carbon;
 
 
 class StaffController extends Controller
 {
+
+    public function progressProject($id_project){
+            
+        $project1 = DB::table('project_structures as p')
+        ->join('tasks as t','t.project_structure','p.id')
+        ->where('p.id_project',$id_project)
+        ->where('t.status',1)
+        ->get();
+        
+        
+
+        $project2 = DB::table('project_structures as p')
+        ->join('tasks as t','t.project_structure','p.id')
+        ->where('p.id_project',$id_project)
+        ->get();
+
+        $beres_project = count($project1);
+        $total_project = count($project2);
+
+        if($total_project == 0){
+            $result = 0;
+        }else{
+            $result = floor($beres_project/$total_project * 100);
+        }
+        
+        return $result;
+    }   
+    
+    public function progressStep($project,$step){
+        $ps = DB::table('project_structures')
+            ->where('id_project',$project)
+            ->where('step',$step)
+            ->get();
+        
+        $temp = $ps[0]->id;        
+        
+        $project = DB::table('project_structures as ps')
+        ->join('tasks as t','t.project_structure','ps.id')
+        ->where('t.project_structure',$temp)
+        ->where('t.status',1)
+        ->get();
+
+
+
+        $project2 = DB::table('project_structures as ps')
+        ->join('tasks as t','t.project_structure','ps.id')
+        ->where('t.project_structure',$temp)
+        ->get();
+
+        $beres_project = count($project);
+        $total_project = count($project2);
+        
+        $result = floor($beres_project/$total_project * 100);
+        return $result;
+    }    
+    
     public function getHirarkiProject($id)
     {
-        $query = DB::table('projects')
-        ->join('project_structures','project_structures.id_project','=','projects.id_project')
-        ->join('project_structure_staff','project_structure_staff.id_project_structure','=','project_structures.id')
-        ->join('staff','staff.nip','=','project_structure_staff.staff')
-        ->where('staff.nip',$id)
-        ->orWhere('projects.project_manager',$id);
-    
-        
-        
-        $response = $query
-        ->distinct()
-        ->get(['projects.id_project','projects.name','projects.project_manager']);
-        //->get(['projects.name','projects.project_manager','projects.start_at','projects.ended_at','projects.deadline_at','projects.status','projects.price']);
-        
-        $projects = array();
-        
-        
-        foreach ($response as $value){
-            $objProject = new \stdClass();
-            $project = DB::table('projects')
-            ->join('staff','staff.nip','=','projects.project_manager')
-            ->where("id_project",$value->id_project)
-            ->get(['id_project','projects.name AS projectname','projects.image','staff.nip AS nip_pm','staff.name AS project_manager',
-            'projects.start_at','projects.deadline_at','projects.ended_at']);
-            
-            
-    
-            $objProject->id_project = $project[0]->id_project;
-            $objProject->name = $project[0]->projectname;
-            $objProject->image = $project[0]->image;
-            $objProject->project_manager = $project[0]->project_manager;
-            $objProject->start_at = $project[0]->start_at;
-            $objProject->deadline_at = $project[0]->deadline_at;
-            $objProject->ended_at = $project[0]->ended_at;
-            $objProject->position_id = -1;
-    
-            if($project[0]->nip_pm == $id){
-                $objProject->position = 'project manager';
-                $objProject->position_id = 0;
-            }
-            
-                
-            $stepTemp = DB::table('project_structures')
-            ->join('steps','steps.id','=','project_structures.step')
-            ->where("project_structures.id_project",$value->id_project)
-            ->get();
-    
-            $steps = array();
-            foreach ($stepTemp as $s){
-                $classStep = new \stdClass();
-    
-    
-                $arrayStep = DB::table('steps as s')
-                ->join("project_structures as ps","ps.step","s.id")
-                ->where("s.id",$s->step)
-                ->get();
+        $project = DB::table('projects')
+        ->select(
+            DB::raw(
+            'id_project,
+            name,
+            deskripsi,
+            client,
+            project_manager,
+            image,
+            start_at,
+            ended_at,
+            deadline_at,
+            status,"Project Manager" as jabatan,0 AS "position_id",0 AS "step_work_on"')
+        )        
+        ->where('project_manager',$id);
 
-                $arrayTeam = DB::table('staff')
-                ->join('project_structure_staff', 'project_structure_staff.staff','=','staff.nip')
-                ->join('project_structures','project_structures.id','=','project_structure_staff.id_project_structure')
-                ->where('project_structures.step',$s->id)
-                ->where('project_structures.id_project',$value->id_project)
-                ->get(['staff.nip','staff.name']);
+        $step = DB::table('projects as p')
+        ->select(
+            DB::raw('
+            p.id_project,
+            p.name,
+            p.deskripsi,
+            p.client,
+            p.project_manager,
+            p.image,
+            p.start_at,
+            p.ended_at,
+            p.deadline_at,
+            p.status,CONCAT(s.name," Leader") AS "jabatan",1 AS "position_id",ps.step AS "step_work_on"')
+        )        
+        ->join('project_structures as ps','ps.id_project','p.id_project')
+        ->join('steps as s','s.id','ps.step')
+        ->where('ps.leader',($id));
 
-                if ($objProject->position_id == -1){
-                    foreach ($arrayTeam as $ateam){
-                        if ($id == $ateam->nip){
-                            $objProject->position_id = $s->id;
-                            $objProject->position = 'Staff '.$s->name;
-                        }
-                    }
-                }
-                
-    
-                $arrayTask = DB::table('tasks')
-                ->where('project_structure',$s->id)
-                ->get();
-    
-                $classStep->id = $arrayStep[0]->id;
-                $classStep->name = $arrayStep[0]->name;
-                $classStep->deskripsi = $arrayStep[0]->deskripsi;
-                $classStep->deadline_at = $arrayStep[0]->deadline_at;
-                $classStep->ended_at = $arrayStep[0]->ended_at;
-                $classStep->team = $arrayTeam;
-                $classStep->task = $arrayTask;
-    
-                array_push($steps,$classStep);
-                   
-            }
-    
-    
-            $objProject->step = $steps;
-    
-    
+        $task = DB::table('projects as p')
+        ->select(
+            DB::raw('
+            p.id_project,
+            p.name,
+            p.deskripsi,
+            p.client,
+            p.project_manager,
+            p.image,
+            p.start_at,
+            p.ended_at,
+            p.deadline_at,
+            p.status,CONCAT(s.name," Staff") AS "jabatan",2 AS "position_id",ps.step AS "step_work_on"')
+        )           
+        ->join('project_structures as ps','ps.id_project','p.id_project')
+        ->join('steps as s','s.id','ps.step')
+        ->join('project_structure_staff as pss','pss.id_project_structure','ps.id')
+        ->where('pss.staff',($id))
+        ->union($project)
+        ->union($step)
+        ->get();       
+        
+        
+        
+
+        $ntask = count($task);
+        for ($i=0; $i < $ntask ; $i++) { 
+            $task[$i]->progress = $this->progressProject($task[$i]->id_project);
+            $task[$i]->start_at = Carbon::parse($task[$i]->start_at)->format('d-m-Y');
+            $task[$i]->deadline_at = Carbon::parse($task[$i]->deadline_at)->format('d-m-Y');
+            $pm_name = Staff::find($task[$i]->project_manager);
+            $task[$i]->project_manager = $pm_name->name;
             
-            // $objProject->step->task = DB::table('project_structures')
-            // ->join('tasks','tasks.project_structure','project_structure.step');
-    
-            array_push($projects,$objProject);
         }
-    
-    
-        return response()->json($projects,200);
+
+        $result = $task;
+        return response()->json($result,200);
     }
+
 
     public function changeDateFormat($date){
         if ($date != null){
