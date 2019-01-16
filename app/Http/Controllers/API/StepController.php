@@ -6,24 +6,21 @@ use Illuminate\Support\Facades\DB;
 
 use Illuminate\Http\Request;
 use App\Step;
-
+use App\ProjectStructure;
 class StepController extends Controller
 {
-    public function createStep(Request $request)
+    public function createStep(Request $request,$project)
     {
         $this->validate($request,[
             'name' => 'required',
             'deskripsi' => 'required',
             'type' => 'required',
-
         ]);
         
-
 
         $name = $request->input('name');
         $deskripsi = $request->input('deskripsi');
         $type = $request->input('type');
-
 
         $step = new Step([
             'name' => $name,
@@ -32,12 +29,20 @@ class StepController extends Controller
 
         ]);
 
-        if($step->save()){
-            $step->step = [
-                'href' => 'api/step/'.$step->id,
-                'method' => 'GET'
-            ];
+        $step->save();
 
+        $last_step = DB::table('steps')
+        ->where('id',$step->id)
+        ->get();
+        
+
+        $project_structure = new ProjectStructure([
+            'id_project' => $project,
+            'step' => $last_step[0]->id,
+            'status' => 0,
+        ]);
+
+        if($project_structure->save()){
             $message = [
                 'msg' => 'step created',
                 'step' => $step

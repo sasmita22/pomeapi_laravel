@@ -19,14 +19,25 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function createTask(Request $request)
+    public function createTask(Request $request,$project,$step)
     {
+
+        $ps = DB::table('project_structures')
+            ->where('id_project',$project)
+            ->where('step',$step)
+            ->get();
+
+        $project_structure = $ps[0]->id;
+
+        $staff = $request->input('staff');
+        
+        
+        
         $this->validate($request,[
             'name' => 'required',
             'deskripsi' => 'required',
             'status' => 'required',
             'type' => 'required',
-            'project_structure' => 'required',
             'deadline_at' => 'required',
             // 'finished_at' => 'required',
             // 'handled_by' => 'required'
@@ -38,7 +49,7 @@ class TaskController extends Controller
         $deskripsi = $request->input('deskripsi');
         $status = $request->input('status');
         $type = $request->input('type');
-        $project_structure = $request->input('project_structure');
+        $project_structure = $project_structure;
         $deadline_at = $request->input('deadline_at');
         // $finished_at = $request->input('finished_at');
         // $handled_by = $request->input('handled_by');
@@ -136,7 +147,7 @@ class TaskController extends Controller
             if(count($staff)==0){
                 $task[0]->staff = null;
             }else{
-                $task[0]->staff = $staff;
+                $task[0]->staff = $staff[0];
             }
             
         }
@@ -182,6 +193,26 @@ class TaskController extends Controller
 
         return response()->json($response,200);
     }    
+
+    public function statusPreview($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->status = 2;
+        if(!$task->update()){
+            return response()->json([
+                'msg' => 'Error during update'
+            ],404);
+        }
+
+
+        $response = [
+            'msg' => 'Task status Preview',
+            'task' => $task
+        ];
+
+        return response()->json($response,200);
+    }     
+
 
     public function getTasks($id_project,$id_step){
         $tasks = DB::table('tasks as t')
@@ -486,11 +517,7 @@ class TaskController extends Controller
     }   
     
     
-    public function deleteMember(Request $request,$project,$step){
-        
-        $this->validate($request,[
-            'staff' => 'required',
-        ]);
+    public function deleteMember($project,$step,$staff){
 
         $ps = DB::table('project_structures')
             ->where('id_project',$project)
@@ -498,10 +525,6 @@ class TaskController extends Controller
             ->get();
 
         $temp = $ps[0]->id;
-
-        $staff = $request->input('staff');
-        
-        
 
         // $pss = new ProjectStructureStaff([
         //     'staff' => $staff,
@@ -520,7 +543,7 @@ class TaskController extends Controller
         }
 
             
-        return response()->json($message,201);
+        return response()->json($message[0],201);
     }
 
 }

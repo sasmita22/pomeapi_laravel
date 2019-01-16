@@ -23,7 +23,8 @@ class ProjectStructure extends Model
     'leader',
     'deskripsi',
     'deadline_at',
-    'ended_at'
+    'ended_at',
+    'status'
     ];  
 
 

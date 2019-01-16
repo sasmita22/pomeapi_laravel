@@ -17,7 +17,7 @@ class Project extends Model
      *
      * @var array
      */
-    protected $fillable = ['id_project','name','project_manager','start_at','ended_at','deadline_at','status','price'];
+    protected $fillable = ['id_project','name','deskripsi','client','project_manager','image','start_at','ended_at','deadline_at','status','price','qrcode'];
 
 
     public function steps()

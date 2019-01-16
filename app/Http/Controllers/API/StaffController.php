@@ -13,6 +13,96 @@ use carbon\Carbon;
 class StaffController extends Controller
 {
 
+    public function qrShowJob($id,$id_project)
+    {
+        
+        $project = DB::table('projects')
+        ->select(
+            DB::raw(
+            'id_project,
+            name,
+            deskripsi,
+            client,
+            project_manager,
+            image,
+            start_at,
+            ended_at,
+            deadline_at,
+            status,"Project Manager" as jabatan,0 AS "position_id",0 AS "step_work_on"')
+        )        
+        ->where('project_manager',$id)
+        ->where('id_project',$id_project);
+
+
+        
+
+        $step = DB::table('projects as p')
+        ->select(
+            DB::raw('
+            p.id_project,
+            p.name,
+            p.deskripsi,
+            p.client,
+            p.project_manager,
+            p.image,
+            p.start_at,
+            p.ended_at,
+            p.deadline_at,
+            p.status,CONCAT(s.name," Leader") AS "jabatan",1 AS "position_id",ps.step AS "step_work_on"')
+        )        
+        ->join('project_structures as ps','ps.id_project','p.id_project')
+        ->join('steps as s','s.id','ps.step')
+        ->where('ps.leader',($id))
+        ->where('p.id_project',$id_project);
+        
+        
+
+        $task = DB::table('projects as p')
+        ->select(
+            DB::raw('
+            p.id_project,
+            p.name,
+            p.deskripsi,
+            p.client,
+            p.project_manager,
+            p.image,
+            p.start_at,
+            p.ended_at,
+            p.deadline_at,
+            p.status,CONCAT(s.name," Staff") AS "jabatan",2 AS "position_id",ps.step AS "step_work_on"')
+        )           
+        ->join('project_structures as ps','ps.id_project','p.id_project')
+        ->join('steps as s','s.id','ps.step')
+        ->join('project_structure_staff as pss','pss.id_project_structure','ps.id')
+        ->where('pss.staff',($id))
+        ->where('ps.id_project',$id_project)      
+        ->union($project)
+        ->union($step)
+        ->get();       
+        
+        
+        
+
+        $ntask = count($task);
+        for ($i=0; $i < $ntask ; $i++) { 
+            $task[$i]->progress = $this->progressProject($task[$i]->id_project);
+            $task[$i]->start_at = Carbon::parse($task[$i]->start_at)->format('d-m-Y');
+            $task[$i]->deadline_at = Carbon::parse($task[$i]->deadline_at)->format('d-m-Y');
+            $pm_name = Staff::find($task[$i]->project_manager);
+            $task[$i]->project_manager = $pm_name->name;
+            
+        }
+
+        $result = $task;
+        if(count($result)==0){
+            $result = new \stdClass;
+            $result->position_id = 'sia mah teu gawe';
+            $result->step_work_on = 'smackqueen yaqueen';
+        }
+        return response()->json($result,200);
+    }    
+
+
     public function progressProject($id_project){
             
         $project1 = DB::table('project_structures as p')

@@ -19,16 +19,19 @@ use Illuminate\Http\Request;
 
 
 //==========================Terbaru Update
-Route::delete('delete/member/{project}/{id_project}','API\TaskController@deleteMember');
+Route::get('getjob/{id}/{project}','API\StaffController@qrShowJob');
 Route::get('projects/{id}','API\StaffController@getHirarkiProject');
-Route::post('step/create','API\StepController@createStep');//create step
-Route::post('task/create','API\TaskController@createTask');//create task
+Route::post('project/create','API\ProjectController@createProject');
+Route::delete('member/project/{project}/step/{step}/staff/{staff}','API\TaskController@deleteMember');
+
+Route::post('step/{project}/create','API\StepController@createStep');//create step
+Route::post('task/{id_project}/{step}/create','API\TaskController@createTask');//create task
 Route::get('staff/getStaffForLeaderOrTeam/{id}','API\TaskController@getStaffForLeaderOrTeam');
 Route::post('addTeam/porject/{project}/step/{step}','API\TaskController@setAddTeam'); //addteam
 Route::get('getTeam/porject/{project}/step/{step}','API\TaskController@getAddTeam'); //getTeam
 Route::get('task/penanggungJawabTask/project/{id_project}/step/{id_step}','API\TaskController@getPenanggungJawabTask'); //getHandledBy
 Route::patch('project/setLeaderProjectStructure/{project}/{step}','API\TaskController@setLeaderProjectStructure'); //set Leader
-Route::patch('task/setHandledBy/{id}','API\TaskController@setHandledBy');//set handledby
+Route::patch('task/setPenanggungJawabTask/{id}','API\TaskController@setPenanggungJawabTask');//set handledby
 Route::get('task/{id}','API\TaskController@getTask');
 Route::get('dashboard/projectManager/{id}','API\TaskController@getProjectManagerDashboard');
 Route::get('dashboard/leader/{id}','API\TaskController@getLeaderDashboard');

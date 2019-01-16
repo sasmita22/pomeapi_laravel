@@ -30,5 +30,7 @@ return array(
     'bd9634f2d41831496de0d3dfe4c94881' => $vendorDir . '/symfony/polyfill-php56/bootstrap.php',
     '6124b4c8570aa390c21fafd04a26c69f' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     '801c31d8ed748cfa537fa45402288c95' => $vendorDir . '/psy/psysh/src/functions.php',
+    '601bf5295f4f86b2c9aa6885006f8ce5' => $vendorDir . '/werneckbh/qr-code/src/helpers/constants.php',
+    '550b6372332081faf3fe4980a1884cf2' => $vendorDir . '/werneckbh/qr-code/src/helpers/functions.php',
     '0d8253363903f0ac7b0978dcde4e28a0' => $vendorDir . '/beyondcode/laravel-dump-server/helpers.php',
 );

@@ -31,6 +31,8 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'bd9634f2d41831496de0d3dfe4c94881' => __DIR__ . '/..' . '/symfony/polyfill-php56/bootstrap.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
+        '601bf5295f4f86b2c9aa6885006f8ce5' => __DIR__ . '/..' . '/werneckbh/qr-code/src/helpers/constants.php',
+        '550b6372332081faf3fe4980a1884cf2' => __DIR__ . '/..' . '/werneckbh/qr-code/src/helpers/functions.php',
         '0d8253363903f0ac7b0978dcde4e28a0' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/helpers.php',
     );
 
@@ -84,6 +86,10 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         array (
             'Ramsey\\Uuid\\' => 12,
         ),
+        'Q' => 
+        array (
+            'QR_Code\\' => 8,
+        ),
         'P' => 
         array (
             'Psy\\' => 4,
@@ -115,6 +121,7 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
             'Lcobucci\\JWT\\' => 13,
             'Laravel\\Tinker\\' => 15,
             'Laravel\\Passport\\' => 17,
+            'LaravelQRCode\\' => 14,
         ),
         'J' => 
         array (
@@ -287,6 +294,10 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         array (
             0 => __DIR__ . '/..' . '/ramsey/uuid/src',
         ),
+        'QR_Code\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code',
+        ),
         'Psy\\' => 
         array (
             0 => __DIR__ . '/..' . '/psy/psysh/src',
@@ -354,6 +365,10 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'Laravel\\Passport\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/passport/src',
+        ),
+        'LaravelQRCode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src',
         ),
         'JakubOnderka\\PhpConsoleHighlighter\\' => 
         array (
@@ -490,13 +505,9 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Document' => __DIR__ . '/../..' . '/app/Document.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
-        'App\\Http\\Controllers\\API\\InvoiceController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/InvoiceController.php',
-        'App\\Http\\Controllers\\API\\PaymentController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/PaymentController.php',
         'App\\Http\\Controllers\\API\\ProjectController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/ProjectController.php',
-        'App\\Http\\Controllers\\API\\SanguanController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/SanguanController.php',
         'App\\Http\\Controllers\\API\\StepController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/StepController.php',
         'App\\Http\\Controllers\\API\\TaskController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/TaskController.php',
-        'App\\Http\\Controllers\\API\\TeamController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/TeamController.php',
         'App\\Http\\Controllers\\API\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/UserController.php',
         'App\\Http\\Controllers\\Api\\StaffController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/StaffController.php',
         'App\\Http\\Controllers\\Auth\\ForgotPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ForgotPasswordController.php',
@@ -518,6 +529,7 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'App\\Payment' => __DIR__ . '/../..' . '/app/Payment.php',
         'App\\Project' => __DIR__ . '/../..' . '/app/Project.php',
         'App\\ProjectStructure' => __DIR__ . '/../..' . '/app/ProjectStructure.php',
+        'App\\ProjectStructureStaff' => __DIR__ . '/../..' . '/app/ProjectStructureStaff.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\AuthServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AuthServiceProvider.php',
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
@@ -2084,6 +2096,11 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'JakubOnderka\\PhpConsoleColor\\InvalidStyleException' => __DIR__ . '/..' . '/jakub-onderka/php-console-color/src/InvalidStyleException.php',
         'JakubOnderka\\PhpConsoleHighlighter\\Highlighter' => __DIR__ . '/..' . '/jakub-onderka/php-console-highlighter/src/Highlighter.php',
         'JsonSerializable' => __DIR__ . '/..' . '/nesbot/carbon/src/JsonSerializable.php',
+        'LaravelQRCode\\Exceptions\\EmptyTextException' => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src/Exceptions/EmptyTextException.php',
+        'LaravelQRCode\\Exceptions\\MalformedUrlException' => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src/Exceptions/MalformedUrlException.php',
+        'LaravelQRCode\\Facades\\QRCode' => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src/Facades/QRCode.php',
+        'LaravelQRCode\\Providers\\QRCodeServiceProvider' => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src/Providers/QRCodeServiceProvider.php',
+        'LaravelQRCode\\QRCodeFactory' => __DIR__ . '/..' . '/werneckbh/laravel-qr-code/src/QRCodeFactory.php',
         'Laravel\\Passport\\ApiTokenCookieFactory' => __DIR__ . '/..' . '/laravel/passport/src/ApiTokenCookieFactory.php',
         'Laravel\\Passport\\AuthCode' => __DIR__ . '/..' . '/laravel/passport/src/AuthCode.php',
         'Laravel\\Passport\\Bridge\\AccessToken' => __DIR__ . '/..' . '/laravel/passport/src/Bridge/AccessToken.php',
@@ -3530,6 +3547,43 @@ class ComposerStaticInitb6085ccf786bbe4f2a78641853e817a2
         'Psy\\VersionUpdater\\GitHubChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/GitHubChecker.php',
         'Psy\\VersionUpdater\\IntervalChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/IntervalChecker.php',
         'Psy\\VersionUpdater\\NoopChecker' => __DIR__ . '/..' . '/psy/psysh/src/VersionUpdater/NoopChecker.php',
+        'QR_Code\\Config\\Specifications' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Config/Specifications.php',
+        'QR_Code\\Contracts\\CodeType' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Contracts/CodeType.php',
+        'QR_Code\\Contracts\\VCardItem' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Contracts/VCardItem.php',
+        'QR_Code\\Encoder\\BitStream' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/BitStream.php',
+        'QR_Code\\Encoder\\Encoder' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/Encoder.php',
+        'QR_Code\\Encoder\\ErrorCorrection\\Rs' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/ErrorCorrection/Rs.php',
+        'QR_Code\\Encoder\\ErrorCorrection\\RsBlock' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/ErrorCorrection/RsBlock.php',
+        'QR_Code\\Encoder\\ErrorCorrection\\RsItem' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/ErrorCorrection/RsItem.php',
+        'QR_Code\\Encoder\\Image' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/Image.php',
+        'QR_Code\\Encoder\\Input' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/Input.php',
+        'QR_Code\\Encoder\\InputItem' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/InputItem.php',
+        'QR_Code\\Encoder\\Mask' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/Mask.php',
+        'QR_Code\\Encoder\\RawCode' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/RawCode.php',
+        'QR_Code\\Encoder\\Vector' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Encoder/Vector.php',
+        'QR_Code\\Exceptions\\EmptyEventSummaryException' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Exceptions/EmptyEventSummaryException.php',
+        'QR_Code\\Exceptions\\InvalidEventDateException' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Exceptions/InvalidEventDateException.php',
+        'QR_Code\\Exceptions\\InvalidVCardAddressEntryException' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Exceptions/InvalidVCardAddressEntryException.php',
+        'QR_Code\\Exceptions\\InvalidVCardPhoneEntryException' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Exceptions/InvalidVCardPhoneEntryException.php',
+        'QR_Code\\QR_Code' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/QR_Code.php',
+        'QR_Code\\Types\\QR_CalendarEvent' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_CalendarEvent.php',
+        'QR_Code\\Types\\QR_EmailMessage' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_EmailMessage.php',
+        'QR_Code\\Types\\QR_Phone' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_Phone.php',
+        'QR_Code\\Types\\QR_Sms' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_Sms.php',
+        'QR_Code\\Types\\QR_Text' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_Text.php',
+        'QR_Code\\Types\\QR_Url' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_Url.php',
+        'QR_Code\\Types\\QR_VCard' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_VCard.php',
+        'QR_Code\\Types\\QR_WiFi' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_WiFi.php',
+        'QR_Code\\Types\\QR_meCard' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/QR_meCard.php',
+        'QR_Code\\Types\\vCard\\Address' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/vCard/Address.php',
+        'QR_Code\\Types\\vCard\\Person' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/vCard/Person.php',
+        'QR_Code\\Types\\vCard\\Phone' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Types/vCard/Phone.php',
+        'QR_Code\\Util\\AbstractGenerator' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/AbstractGenerator.php',
+        'QR_Code\\Util\\Benchmark' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/Benchmark.php',
+        'QR_Code\\Util\\FrameFiller' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/FrameFiller.php',
+        'QR_Code\\Util\\Logger' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/Logger.php',
+        'QR_Code\\Util\\Split' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/Split.php',
+        'QR_Code\\Util\\Tools' => __DIR__ . '/..' . '/werneckbh/qr-code/src/QR_Code/Util/Tools.php',
         'Ramsey\\Uuid\\BinaryUtils' => __DIR__ . '/..' . '/ramsey/uuid/src/BinaryUtils.php',
         'Ramsey\\Uuid\\Builder\\DefaultUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DefaultUuidBuilder.php',
         'Ramsey\\Uuid\\Builder\\DegradedUuidBuilder' => __DIR__ . '/..' . '/ramsey/uuid/src/Builder/DegradedUuidBuilder.php',
