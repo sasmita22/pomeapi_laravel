@@ -20,7 +20,6 @@ class Step extends Model
 		'id',
         'name',
         'deskripsi',
-		'type',
     ];  
 
 

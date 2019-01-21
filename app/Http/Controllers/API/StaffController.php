@@ -95,11 +95,29 @@ class StaffController extends Controller
 
         $result = $task;
         if(count($result)==0){
-            $result = new \stdClass;
-            $result->position_id = 'sia mah teu gawe';
-            $result->step_work_on = 'smackqueen yaqueen';
+            $result = DB::table('projects')
+            ->where('id_project',$id_project)
+            ->get([
+                'id_project',
+                'name',
+                'deskripsi',
+                'client',
+                'project_manager',
+                'image',
+                'start_at',
+                'ended_at',
+                'deadline_at',
+                'status',
+            ]);
+            $result[0]->jabatan = "Tidak Ada";
+            $result[0]->position_id = -1;
+            $result[0]->step_work_on = 0;
+            $result[0]->start_at = Carbon::parse($result[0]->start_at)->format('d-m-Y');
+            $result[0]->deadline_at = Carbon::parse($result[0]->deadline_at)->format('d-m-Y');            
+            $result[0]->progress = $this->progressProject($id_project);
+            return response()->json($result[0],200);
         }
-        return response()->json($result,200);
+        return response()->json($result[0],200);
     }    
 
 
@@ -318,8 +336,7 @@ class StaffController extends Controller
                 $objTask->id 	= $task[0]->id;
                 $objTask->name = $task[0]->name;
                 $objTask->deskripsi = $task[0]->deskripsi;
-                $objTask->status = $task[0]->status;
-                $objTask->type = $task[0]->type;			
+                $objTask->status = $task[0]->status;		
                 $objTask->project_structure = $task[0]->project_structure;
                 $objTask->deadline_at = $task[0]->deadline_at;
                 $objTask->finished_at = $task[0]->finished_at;

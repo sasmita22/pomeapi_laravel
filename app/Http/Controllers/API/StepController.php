@@ -14,19 +14,17 @@ class StepController extends Controller
         $this->validate($request,[
             'name' => 'required',
             'deskripsi' => 'required',
-            'type' => 'required',
+            'deadline_at' => 'required',
         ]);
         
 
         $name = $request->input('name');
         $deskripsi = $request->input('deskripsi');
-        $type = $request->input('type');
+        $deadline_at = $request->input('deadline_at');
 
         $step = new Step([
             'name' => $name,
             'deskripsi' => $deskripsi,
-            'type' => $type,
-
         ]);
 
         $step->save();
@@ -40,6 +38,8 @@ class StepController extends Controller
             'id_project' => $project,
             'step' => $last_step[0]->id,
             'status' => 0,
+            'deadline_at' => $deadline_at,
+            'deskripsi' => $deskripsi,            
         ]);
 
         if($project_structure->save()){
@@ -58,6 +58,37 @@ class StepController extends Controller
     }
 
 
+    public function progressStep($project,$step){
+        $ps = DB::table('project_structures')
+            ->where('id_project',$project)
+            ->where('step',$step)
+            ->get();
+        
+        $temp = $ps[0]->id;        
+        
+        $project = DB::table('project_structures as ps')
+        ->join('tasks as t','t.project_structure','ps.id')
+        ->where('t.project_structure',$temp)
+        ->where('t.status',1)
+        ->get();
+
+
+
+        $project2 = DB::table('project_structures as ps')
+        ->join('tasks as t','t.project_structure','ps.id')
+        ->where('t.project_structure',$temp)
+        ->get();
+
+        $beres_project = count($project);
+        $total_project = count($project2);
+        if($total_project != 0){
+            $result = floor($beres_project/$total_project * 100);
+        }else{
+            $result = 0;
+        }
+        
+        return $result;
+    }    
 
     public function getDetailStep($id_project,$id_step){
         $step = DB::table('project_structures as ps')
@@ -68,9 +99,12 @@ class StepController extends Controller
 
         $step = $step[0];
 
-        $leader = DB::table('staff as s')
+        if ($step->leader != null){
+            $leader = DB::table('staff as s')
             ->where('s.nip',$step->leader)
             ->get(['nip','name','jabatan','image']);
+            $step->leader = $leader[0];
+        }
 
         $staff = DB::table('project_structures as ps') 
         ->join('project_structure_staff as pss','pss.id_project_structure','ps.id')
@@ -78,10 +112,11 @@ class StepController extends Controller
         ->where('ps.id',$step->id_project_structure)
         ->get(['s.nip','s.name','s.jabatan', 's.email','image']);
 
-        $step->leader = $leader[0];
+        
         $step->team = $staff;
+        $step->progress = $this->progressStep($id_project,$id_step);
 
 
         return response()->json($step,200);
     }
-}
+}       

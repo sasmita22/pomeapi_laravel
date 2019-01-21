@@ -10,6 +10,7 @@ use App\Task;
 use App\Staff;
 use App\ProjectStructure;
 use App\ProjectStructureStaff;
+use carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -18,6 +19,26 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function getNotification($id){
+        $notif = DB::select(DB::raw("
+            select n.id , p.name as project, st.name as step, t.name as task, n.tgl_review from projects as p
+            join project_structures as ps
+            on ps.id_project = p.id_project
+            join steps as st
+            on st.id = ps.step
+            join tasks as t
+            on t.project_structure = ps.id
+            join notifications as n
+            on n.task = t.id
+            where n.leader = '$id' or n.project_manager = '$id'
+            order by n.tgl_review desc         
+        "));
+
+
+
+        return response()->json($notif,201);
+    }
 
     public function createTask(Request $request,$project,$step)
     {
@@ -36,8 +57,6 @@ class TaskController extends Controller
         $this->validate($request,[
             'name' => 'required',
             'deskripsi' => 'required',
-            'status' => 'required',
-            'type' => 'required',
             'deadline_at' => 'required',
             // 'finished_at' => 'required',
             // 'handled_by' => 'required'
@@ -47,8 +66,6 @@ class TaskController extends Controller
 
         $name = $request->input('name');
         $deskripsi = $request->input('deskripsi');
-        $status = $request->input('status');
-        $type = $request->input('type');
         $project_structure = $project_structure;
         $deadline_at = $request->input('deadline_at');
         // $finished_at = $request->input('finished_at');
@@ -58,8 +75,7 @@ class TaskController extends Controller
         $task = new Task([
             'name' => $name,
             'deskripsi' => $deskripsi,
-            'status' => $status,
-            'type' => $type,
+            'status' => 0,
             'project_structure' => $project_structure,
             'deadline_at' => $deadline_at,
             // 'finished_at' => $finished_at,
@@ -86,54 +102,62 @@ class TaskController extends Controller
         return response()->json($response,404);
     }
 
-    public function getProjectManagerDashboard($nip){ 
+    public function getManagerDashboard($nip){ 
         $query = DB::table('projects as p')
-        ->select(DB::raw('t.id , t.deadline_at , p.name as project, s.name as step'))
+        ->select(DB::raw('t.id , t.name, t.deadline_at , p.name as project, s.name as step'))
         ->join('project_structures as ps','ps.id_project','p.id_project')
         ->join('steps as s','s.id','ps.step')
         ->join('tasks as t','t.project_structure','ps.id')
         ->where('p.project_manager',$nip)
+        ->where('t.status',0)
         ->orderBy('t.deadline_at')
         ->get();
+        for ($i=0; $i < count($query) ; $i++) { 
+            $query[$i]->deadline_at = Carbon::parse($query[$i]->deadline_at)->format('d F Y');
+        }        
 
         return response()->json($query,200); 
     }
         
     public function getLeaderDashboard($nip){
         $query = DB::table('projects as p')
-        ->select(DB::raw('t.id , t.deadline_at , p.name as project, s.name as step'))
+        ->select(DB::raw('t.id , t.name, t.deadline_at , p.name as project, s.name as step'))
         ->join('project_structures as ps','ps.id_project','p.id_project')
         ->join('steps as s','s.id','ps.step')
         ->join('tasks as t','t.project_structure','ps.id')
         ->where('ps.leader',$nip)
+        ->where('t.status',0)
         ->orderBy('t.deadline_at')
         ->get();
+        
+        for ($i=0; $i < count($query) ; $i++) { 
+            $query[$i]->deadline_at = Carbon::parse($query[$i]->deadline_at)->format('d F Y');
+        }
 
         return response()->json($query,200); 
     } 
     
     public function getStaffDashboard($nip){
         $query = DB::table('projects as p')
-        ->select(DB::raw('t.id , t.deadline_at , p.name as project, s.name as step'))
+        ->select(DB::raw('t.id ,t.name, t.deadline_at , p.name as project, s.name as step'))
         ->join('project_structures as ps','ps.id_project','p.id_project')
         ->join('steps as s','s.id','ps.step')
         ->join('tasks as t','t.project_structure','ps.id')
         ->where('t.handled_by',$nip)
+        ->where('t.status',0)
         ->orderBy('t.deadline_at')
         ->get();
 
+        for ($i=0; $i < count($query) ; $i++) { 
+            $query[$i]->deadline_at = Carbon::parse($query[$i]->deadline_at)->format('d F Y');
+        }
+
+        
         return response()->json($query,200); 
     }       
 
      
     public function getTask($id){
-        // $task = Task::where('id',$id)->firstOrFail();
-
-        // $staff = Staff::where('nip',$task->handled_by)
-        //     ->firstOrFail(['nip','name','jabatan','image']);
-
-
-        // $task->staff = $staff;
 
         $task = DB::table('tasks')
         ->where('id',$id)
@@ -228,56 +252,25 @@ class TaskController extends Controller
         return response()->json($tasks,200);
     }
 
-    public function getDashboardStaff($nip){
-        $task = DB::table('tasks as t')
-            ->join('staff as st','t.handled_by','st.nip')
-            ->join('project_structures as ps','t.project_structure','ps.id')
-            ->join('steps as s','s.id','ps.step')
-            ->join('projects as p','ps.id_project','p.id_project')
-            ->where('st.nip',$nip)
-            ->orderBy('t.deadline_at','asc')
-            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
-
-        return response()->json($task,200);
-    }
-
-    public function getDashboardLeader($nip){
-        $task = DB::table('tasks as t')
-            ->join('project_structures as ps','t.project_structure','ps.id')
-            ->join('staff as st','ps.leader','st.nip')
-            ->join('steps as s','s.id','ps.step')
-            ->join('projects as p','ps.id_project','p.id_project')
-            ->where('st.nip',$nip)
-            ->orderBy('t.deadline_at','asc')
-            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
-
-        return response()->json($task,200);
-    }
-
-    public function getDashboardManager($nip){
-        $task = DB::table('tasks as t')
-            ->join('project_structures as ps','t.project_structure','ps.id')
-            ->join('steps as s','s.id','ps.step')
-            ->join('projects as p','ps.id_project','p.id_project')
-            ->join('staff as st','p.project_manager','st.nip')
-            ->where('st.nip',$nip)
-            ->orderBy('t.deadline_at','asc')
-            ->get(['t.id as id_task','t.name as task','t.deadline_at','s.id as id_itep','p.id_project as id_project']);
-
-        return response()->json($task,200);
-    }
-
 // ---------------------------------------------------------------TERBARU----------------------------------------------------------------------------    
 
-    public function getPenanggungJawabTask($id_project,$id_step){
-        $tasks = DB::table('project_structures as p')
-        ->join('project_structure_staff as ps','ps.id_project_structure','p.id')
-        ->join('staff as s','s.nip','ps.staff')
-        ->where('p.id_project',$id_project)
-        ->where('p.step',$id_step)
-        ->get(['s.nip','s.name','s.image','s.jabatan']); 
+    public function getPenanggungJawabTask($id_project,$id_step,$task){
+        // $tasks = DB::table('project_structures as p')
+        // ->join('project_structure_staff as ps','ps.id_project_structure','p.id')
+        // ->join('staff as s','s.nip','ps.staff')
+        // ->where('p.id_project',$id_project)
+        // ->where('p.step',$id_step)
+        // ->get(); 
+        // ->get(['s.nip','s.name','s.image','s.jabatan']); 
 
-        return response()->json($tasks,200);
+        $result = DB::select(DB::raw("
+            SELECT s.nip,s.name,s.image,s.jabatan
+            FROM project_structures AS ps
+            JOIN project_structure_staff AS pss on ps.id = pss.id_project_structure
+            JOIN staff as s on s.nip = pss.staff
+            where ps.id_project = '$id_project' AND ps.step = '$id_step' and pss.staff not in (select coalesce(handled_by,0) from tasks where id='$task')            
+        "));
+        return response()->json($result,200);
     }
 
     public function setPenanggungJawabTask(Request $request, $id){
@@ -308,7 +301,7 @@ class TaskController extends Controller
             'project' => $task
         ];
 
-        return response()->json($response,200);
+        return response()->json($response,201);
     }    
 
 
@@ -349,10 +342,19 @@ class TaskController extends Controller
 
     public function getAddTeam($project,$step){
 
-        $ps = DB::table('project_structures')
-            ->where('id_project',$project)
-            ->where('step',$step)
-            ->get();
+        // $ps = DB::table('project_structures')
+        //     ->join()
+        //     ->where('id_project',$project)
+        //     ->where('step',$step)
+        //     ->get(['id']);
+
+        $ps = DB::select(DB::raw("
+            select staff.nip, staff.name, staff.jabatan, staff.image from staff
+            WHERE staff.nip in (select project_structure_staff.staff
+            from project_structures
+            join project_structure_staff on project_structures.id = project_structure_staff.id_project_structure
+            where project_structures.id_project = '$project' AND project_structures.step = '$step')        
+        "));
 
         return response()->json($ps,200);
     }  
@@ -385,7 +387,7 @@ class TaskController extends Controller
             $message = [
                 'msg' => 'Team has been created',
             ];
-            return response()->json($message,201);
+            return response()->json($message,200);
         }
 
         
@@ -455,6 +457,7 @@ class TaskController extends Controller
 
         $leader = DB::table('project_structures')
         ->where('id_project',$id)
+        ->whereNotNull('leader')
         ->pluck('leader')
         ->toArray();
         
@@ -475,7 +478,7 @@ class TaskController extends Controller
                 
         $result = DB::table('staff')
         ->whereNotin('nip',$bekerja)
-        ->get();
+        ->get(['nip','name','image','jabatan']);
 
         return response()->json($result,200); 
     }   
@@ -526,24 +529,17 @@ class TaskController extends Controller
 
         $temp = $ps[0]->id;
 
-        // $pss = new ProjectStructureStaff([
-        //     'staff' => $staff,
-        //     'id_project_structure' => $temp,
-        // ]);
-
         $pss = DB::table('project_structure_staff')
         ->where('id_project_structure',$temp)
         ->where('staff',$staff);
         
 
         if($pss->delete()){
-            $message = 'member has been deleted';
-        }else{
-            $message = 'gagal wow';
+            $msg= 'member has been deleted';   
+            return response()->json($msg[0],201);
         }
 
-            
-        return response()->json($message[0],201);
+        
     }
 
 }

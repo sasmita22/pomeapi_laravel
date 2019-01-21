@@ -67,6 +67,19 @@ class ProjectController extends Controller
     }
 
 
+
+    public function createQrProject($id){
+        // $qrcode = $id.'.png';
+
+        $qrcode = '{ project_id : '.$id.' }';
+
+        $file = public_path('/images/qrcode/'.$id.'.png');
+        QRCode::text($qrcode)->setOutfile($file)->png();
+        
+        return response('berhasil');
+    }
+
+
     public function getProjectDetail($id_project)
     {
         $project = Project::where('id_project',$id_project)->firstOrFail();

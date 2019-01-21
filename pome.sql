@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.7
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 25, 2018 at 10:49 PM
--- Server version: 10.1.30-MariaDB
--- PHP Version: 7.2.2
+-- Generation Time: Jan 21, 2019 at 01:37 AM
+-- Server version: 10.1.37-MariaDB
+-- PHP Version: 7.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -87,6 +87,29 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2018_10_22_041945_create_teams_table', 1),
 (19, '2018_11_23_085941_create_update_project_structures_trigger', 1),
 (20, '2018_11_23_085953_create_update_project_trigger', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `task` int(10) UNSIGNED NOT NULL,
+  `leader` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `project_manager` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `task`, `leader`, `project_manager`) VALUES
+(1, 1, '7', '2'),
+(2, 2, '7', '2'),
+(3, 1, '7', '2'),
+(4, 4, '4', '2');
 
 -- --------------------------------------------------------
 
@@ -593,34 +616,35 @@ INSERT INTO `project_structures` (`id`, `id_project`, `step`, `leader`, `status`
 (7, 3, 8, '2', 0, 'Project Telkomsel, Step Maintenance. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', '2018-12-30', NULL),
 (8, 4, 1, '1', 0, 'Project Toyota App, Step Marketing. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', '2018-12-31', NULL),
 (9, 4, 7, '4', 0, 'Project Toyota App, Step Deployment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', '2018-12-28', NULL),
-(10, 4, 8, '3', 0, 'Project Toyota App, Step maintenance. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', '2018-12-29', NULL);
+(10, 4, 8, '3', 0, 'Project Toyota App, Step maintenance. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', '2018-12-29', NULL),
+(11, 1, 10, NULL, 0, 'Melakukan Penyebaran ke tiap tiap SMP', '2018-11-20', NULL);
 
 --
 -- Triggers `project_structures`
 --
 DELIMITER $$
-CREATE TRIGGER `update_project` AFTER UPDATE ON `project_structures` FOR EACH ROW BEGIN
-                SET @id = new.id_project;
-            
-                set @beres = (SELECT COUNT(IF(status=0,1,null)) = 0
-                from project_structures
-                where id_project = @id
-                group by id_project);       
-                
-                IF @beres = 1 then
-                    BEGIN
-                        update projects
-                        set status = 1
-                        where id_project = @id;            
-                    END;
-                ELSE
-                    BEGIN
-                        update projects
-                        set status = 0
-                        where id_project = @id;               
-                    END;
-                END IF;
-            END
+CREATE TRIGGER `ps_trigger` AFTER UPDATE ON `project_structures` FOR EACH ROW BEGIN
+		SET @id = new.id_project;
+	
+		set @beres = (SELECT COUNT(IF(status=0,1,null)) = 0
+		from project_structures
+		where id_project = @id
+		group by id_project);       
+		
+		IF @beres = 1 then
+			BEGIN
+				update projects
+				set status = 1
+				where id_project = @id;            
+			END;
+		ELSE
+			BEGIN
+				update projects
+				set status = 0
+				where id_project = @id;               
+			END;
+		END IF;
+	END
 $$
 DELIMITER ;
 
@@ -655,17 +679,6 @@ INSERT INTO `project_structure_staff` (`id_project_structure`, `staff`) VALUES
 (9, '6'),
 (10, '3'),
 (10, '5');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `project_type`
---
-
-CREATE TABLE `project_type` (
-  `id_project` int(10) UNSIGNED NOT NULL,
-  `type` int(10) UNSIGNED NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -743,23 +756,24 @@ INSERT INTO `staff` (`nip`, `name`, `email`, `jabatan`, `telephone`, `image`, `p
 CREATE TABLE `steps` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `type` int(11) NOT NULL
+  `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `steps`
 --
 
-INSERT INTO `steps` (`id`, `name`, `deskripsi`, `type`) VALUES
-(1, 'Marketing', 'Step Marketing. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(2, 'Analisis', 'Step Analisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(3, 'Client Meeting', 'Step Client Meeting. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(4, 'Kontrak', 'Step Kontrak. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(5, 'Coding', 'Step Coding. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(6, 'Quality Control', 'Step Quality Control. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(7, 'Deployment', 'Step Deployment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0),
-(8, 'Maintenance', 'Step Maintenance. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.', 0);
+INSERT INTO `steps` (`id`, `name`, `deskripsi`) VALUES
+(1, 'Marketing', 'Step Marketing. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(2, 'Analisis', 'Step Analisis. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(3, 'Client Meeting', 'Step Client Meeting. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(4, 'Kontrak', 'Step Kontrak. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(5, 'Coding', 'Step Coding. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(6, 'Quality Control', 'Step Quality Control. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(7, 'Deployment', 'Step Deployment. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(8, 'Maintenance', 'Step Maintenance. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc.'),
+(9, 'Penyebaran', 'Melakukan Penyebaran ke tiap tiap SMP'),
+(10, 'Penyebaran', 'Melakukan Penyebaran ke tiap tiap SMP');
 
 -- --------------------------------------------------------
 
@@ -772,7 +786,6 @@ CREATE TABLE `tasks` (
   `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `status` int(11) NOT NULL,
-  `type` int(10) UNSIGNED NOT NULL,
   `project_structure` int(10) UNSIGNED NOT NULL,
   `deadline_at` date DEFAULT NULL,
   `finished_at` date DEFAULT NULL,
@@ -783,42 +796,67 @@ CREATE TABLE `tasks` (
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`id`, `name`, `deskripsi`, `status`, `type`, `project_structure`, `deadline_at`, `finished_at`, `handled_by`) VALUES
-(1, 'Membuat ERD', 'Task Membuar ERD. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ', 0, 1, 1, '2018-12-27', NULL, '1'),
-(2, 'Pembuatan Server', 'Task Pembuatan Server. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 1, 1, '2018-12-27', NULL, '1'),
-(3, 'Mockup Interface', 'Task Mockup Interface. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 2, 1, '2018-12-29', NULL, '3'),
-(4, 'Pembuatan FrontEnd', 'Task Pembuatan FrontEnd. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 2, 2, '2018-12-21', NULL, '3'),
-(5, 'Membuat Database', 'Task Membuat Database. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 3, 2, '2018-12-21', NULL, '4'),
-(6, 'Mengisi Database', 'Task Mengisi Database. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 3, 3, '2018-12-25', NULL, '4'),
-(7, 'Testing', 'Task Testing. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 4, 3, '2018-12-20', NULL, '4'),
-(8, 'Debugging', 'Task Debugging. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 0, 4, 4, '2018-12-28', NULL, '6');
+INSERT INTO `tasks` (`id`, `name`, `deskripsi`, `status`, `project_structure`, `deadline_at`, `finished_at`, `handled_by`) VALUES
+(1, 'Membuat ERD', 'Task Membuar ERD. Lorem ipsum dolor sit amet, consectetur adipiscing elit. ', 0, 1, '2018-12-27', NULL, '1'),
+(2, 'Pembuatan Server', 'Task Pembuatan Server. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 2, 1, '2018-12-27', NULL, '1'),
+(3, 'Mockup Interface', 'Task Mockup Interface. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 1, '2018-12-29', NULL, '3'),
+(4, 'Pembuatan FrontEnd', 'Task Pembuatan FrontEnd. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 2, 2, '2018-12-21', NULL, '3'),
+(5, 'Membuat Database', 'Task Membuat Database. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 2, '2018-12-21', NULL, '4'),
+(6, 'Mengisi Database', 'Task Mengisi Database. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 3, '2018-12-25', NULL, '4'),
+(7, 'Testing', 'Task Testing. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 1, 3, '2018-12-20', NULL, '4'),
+(8, 'Debugging', 'Task Debugging. Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 0, 4, '2018-12-28', NULL, '6');
 
 --
 -- Triggers `tasks`
 --
 DELIMITER $$
-CREATE TRIGGER `update_project_structures` AFTER UPDATE ON `tasks` FOR EACH ROW BEGIN
-                SET @id = new.project_structure;
-               
-                set @beres = (SELECT COUNT(IF(status=0,1,null)) = 0
-                from tasks
-                where project_structure = @id
-                group by project_structure);       
-                
-                IF @beres = 1 then
-                    BEGIN
-                        update project_structures
-                        set status = 1
-                        where id = @id;            
-                    END;
-                ELSE
-                    BEGIN
-                        update project_structures
-                        set status = 0
-                        where id = @id;               
-                    END;
-                END IF;
-            END
+CREATE TRIGGER `taskTrigger` AFTER UPDATE ON `tasks` FOR EACH ROW BEGIN
+	SET @status := new.status;
+	IF @status = 2 then
+		SET @id := new.id;
+        
+        set @project_manager := (select distinct p.project_manager from projects as p
+		inner join project_structures as ps
+		on p.id_project = ps.id_project
+		inner join tasks as t
+		on t.project_structure = ps.id
+		where t.id = @id);
+
+		set @leader := (select distinct ps.leader from projects as p
+		inner join project_structures as ps
+		on p.id_project = ps.id_project
+		inner join tasks as t
+		on t.project_structure = ps.id
+		where t.id = @id);
+        
+		insert into notifications(task,leader,project_manager)
+		values(@id,@leader,@project_manager);
+        
+        
+        
+		SET @project = new.project_structure;
+	   
+		set @beres = (SELECT COUNT(IF(status=0,1,null)) = 0
+		from tasks
+		where project_structure = @project
+		group by project_structure);       
+		
+		IF @beres = 1 then
+			BEGIN
+				update project_structures
+				set status = 1
+				where id = @project;            
+			END;
+		ELSE
+			BEGIN
+				update project_structures
+				set status = 0
+				where id = @project;               
+			END;
+		END IF;        
+        
+	END IF;
+END
 $$
 DELIMITER ;
 
@@ -832,33 +870,6 @@ CREATE TABLE `teams` (
   `id_team` int(10) UNSIGNED NOT NULL,
   `staff` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `types`
---
-
-CREATE TABLE `types` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `types`
---
-
-INSERT INTO `types` (`id`, `name`) VALUES
-(1, 'type 1'),
-(2, 'type 2'),
-(3, 'type 3'),
-(4, 'type 4'),
-(5, 'type 5'),
-(6, 'type 6'),
-(7, 'type 7'),
-(8, 'type 8'),
-(9, 'type 9'),
-(10, 'type 10');
 
 --
 -- Indexes for dumped tables
@@ -883,6 +894,15 @@ ALTER TABLE `invoices`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `leader_notif` (`leader`),
+  ADD KEY `pm_notif` (`project_manager`),
+  ADD KEY `task_notif` (`task`);
 
 --
 -- Indexes for table `oauth_access_tokens`
@@ -949,13 +969,6 @@ ALTER TABLE `project_structure_staff`
   ADD KEY `project_structure_staff_staff_foreign` (`staff`);
 
 --
--- Indexes for table `project_type`
---
-ALTER TABLE `project_type`
-  ADD PRIMARY KEY (`id_project`,`type`),
-  ADD KEY `project_type_type_foreign` (`type`);
-
---
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
@@ -980,7 +993,6 @@ ALTER TABLE `steps`
 --
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `tasks_type_foreign` (`type`),
   ADD KEY `tasks_handled_by_foreign` (`handled_by`),
   ADD KEY `tasks_project_structure_foreign` (`project_structure`);
 
@@ -990,12 +1002,6 @@ ALTER TABLE `tasks`
 ALTER TABLE `teams`
   ADD PRIMARY KEY (`id_team`,`staff`),
   ADD KEY `teams_staff_foreign` (`staff`);
-
---
--- Indexes for table `types`
---
-ALTER TABLE `types`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1018,6 +1024,12 @@ ALTER TABLE `invoices`
 --
 ALTER TABLE `migrations`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `oauth_clients`
@@ -1047,7 +1059,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `project_structures`
 --
 ALTER TABLE `project_structures`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `settings`
@@ -1059,19 +1071,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `steps`
 --
 ALTER TABLE `steps`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
-
---
--- AUTO_INCREMENT for table `types`
---
-ALTER TABLE `types`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -1088,6 +1094,14 @@ ALTER TABLE `documents`
 --
 ALTER TABLE `invoices`
   ADD CONSTRAINT `invoices_project_foreign` FOREIGN KEY (`project`) REFERENCES `projects` (`id_project`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `leader_notif` FOREIGN KEY (`leader`) REFERENCES `staff` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `pm_notif` FOREIGN KEY (`project_manager`) REFERENCES `staff` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `task_notif` FOREIGN KEY (`task`) REFERENCES `tasks` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `payments`
@@ -1117,13 +1131,6 @@ ALTER TABLE `project_structure_staff`
   ADD CONSTRAINT `project_structure_staff_staff_foreign` FOREIGN KEY (`staff`) REFERENCES `staff` (`nip`);
 
 --
--- Constraints for table `project_type`
---
-ALTER TABLE `project_type`
-  ADD CONSTRAINT `project_type_id_project_foreign` FOREIGN KEY (`id_project`) REFERENCES `projects` (`id_project`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `project_type_type_foreign` FOREIGN KEY (`type`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `settings`
 --
 ALTER TABLE `settings`
@@ -1134,8 +1141,7 @@ ALTER TABLE `settings`
 --
 ALTER TABLE `tasks`
   ADD CONSTRAINT `tasks_handled_by_foreign` FOREIGN KEY (`handled_by`) REFERENCES `staff` (`nip`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `tasks_project_structure_foreign` FOREIGN KEY (`project_structure`) REFERENCES `project_structures` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `tasks_type_foreign` FOREIGN KEY (`type`) REFERENCES `types` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `tasks_project_structure_foreign` FOREIGN KEY (`project_structure`) REFERENCES `project_structures` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `teams`
