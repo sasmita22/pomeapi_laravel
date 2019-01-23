@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2019 at 01:37 AM
+-- Generation Time: Jan 23, 2019 at 02:35 AM
 -- Server version: 10.1.37-MariaDB
--- PHP Version: 7.3.0
+-- PHP Version: 7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -98,18 +98,19 @@ CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
   `task` int(10) UNSIGNED NOT NULL,
   `leader` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `project_manager` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `project_manager` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tgl_review` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `task`, `leader`, `project_manager`) VALUES
-(1, 1, '7', '2'),
-(2, 2, '7', '2'),
-(3, 1, '7', '2'),
-(4, 4, '4', '2');
+INSERT INTO `notifications` (`id`, `task`, `leader`, `project_manager`, `tgl_review`) VALUES
+(1, 1, '7', '2', '0000-00-00 00:00:00'),
+(2, 2, '7', '2', '0000-00-00 00:00:00'),
+(3, 1, '7', '2', '0000-00-00 00:00:00'),
+(4, 4, '4', '2', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -237,6 +238,7 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('460a5373b398542ec12b6082206d945493556b30e158987799721505db622f80fe9db52da4ebe691', 2, 1, 'nApp', '[]', 0, '2018-12-24 10:56:04', '2018-12-24 10:56:04', '2019-12-24 17:56:04'),
 ('47e03c8a1a50c12f3286e00d616127a5b229d2bcb7217364a1ef93f1d9d4024e4a5d0e7f4c8b6756', 5, 1, 'nApp', '[]', 0, '2018-12-18 01:34:53', '2018-12-18 01:34:53', '2019-12-18 08:34:53'),
 ('4828a8c88bfe24cab1574f39d026f75a545766ca04680ee3cbfc040bf58813b41a00a9ec34958b7d', 2, 1, 'nApp', '[]', 0, '2018-12-24 10:19:42', '2018-12-24 10:19:42', '2019-12-24 17:19:42'),
+('48c80457621e67797488609ba54ae92d116cf6b885b7872d97fc30487d2528baf22aa6440fb39903', 2, 1, 'nApp', '[]', 0, '2019-01-22 18:21:02', '2019-01-22 18:21:02', '2020-01-23 01:21:02'),
 ('4a9cfb668cf1f72d345aeb8ba874d8f000299ee595551145be18d4bf1d24fac5e967ec5c223ea596', 7, 1, 'nApp', '[]', 0, '2018-12-15 07:32:47', '2018-12-15 07:32:47', '2019-12-15 14:32:47'),
 ('4c15af45aec3908220e1505257b9021c58befe11008c6a65821504cf69adec135773674fa0a75993', 2, 1, 'nApp', '[]', 0, '2018-12-25 12:02:20', '2018-12-25 12:02:20', '2019-12-25 19:02:20'),
 ('4e1fe33410da5926a2cc1eebdc1da824235c84d6d0794595f115ef3c4025748ce631529100be566d', 1, 1, 'nApp', '[]', 0, '2018-12-04 02:28:38', '2018-12-04 02:28:38', '2019-12-04 09:28:38'),
@@ -249,6 +251,7 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('51ca3d6eb8ac0ab9d2b29eeb49845caea1a84b0d0dac81db800919ea4c80f832caecd51f7a5c1182', 7, 1, 'nApp', '[]', 0, '2018-12-03 11:41:53', '2018-12-03 11:41:53', '2019-12-03 18:41:53'),
 ('51f8eafb61bb8bd25960fb72237f57bc892a306c4c60e2a5a3ddca69777c5e0a7275995152b6b7ab', 2, 1, 'nApp', '[]', 0, '2018-12-24 10:14:33', '2018-12-24 10:14:33', '2019-12-24 17:14:33'),
 ('5239d7957df5a6554b7540b51131df43018589b33ab3d6e56d8f00f3d9bbafbd6f38c8924d3b4cdf', 2, 1, 'nApp', '[]', 0, '2018-12-25 12:24:39', '2018-12-25 12:24:39', '2019-12-25 19:24:39'),
+('550dfb3a600f2d6ab465ba7968cac75f593fd668e27e5a93b46df9f99cdd47dcc0be46538102253d', 2, 1, 'nApp', '[]', 0, '2019-01-22 17:07:54', '2019-01-22 17:07:54', '2020-01-23 00:07:54'),
 ('55253f1adf95354d13b8c7f8c7a8296b155052f8e280293f7d89124cd185a8f307fe35497d979ccd', 1, 1, 'nApp', '[]', 0, '2018-12-16 10:29:15', '2018-12-16 10:29:15', '2019-12-16 17:29:15'),
 ('555b70e24f786d850d4d52ec0eecd8945865793c5559bc933c37b8b900302ea020a3aa8ab068b6ca', 7, 1, 'nApp', '[]', 0, '2018-12-03 11:54:43', '2018-12-03 11:54:43', '2019-12-03 18:54:43'),
 ('555daf98f7c73d04612312d894bed6984d8df963a6c2933af2b030fe4c9fa7c617af31bc3ec76838', 7, 1, 'nApp', '[]', 0, '2018-12-18 03:40:41', '2018-12-18 03:40:41', '2019-12-18 10:40:41'),
@@ -371,6 +374,7 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('a904c659fa3fae1b456653b7104a41385f97b49689dcf56db4c588525f795a12eafd33da7ce271e7', 7, 1, 'nApp', '[]', 0, '2018-12-04 00:37:45', '2018-12-04 00:37:45', '2019-12-04 07:37:45'),
 ('a93c4a3926e0b57d444baada0d2b61a474fd04ae27b543577d4f404261385562e9a9f3b0b7e83a2b', 7, 1, 'nApp', '[]', 0, '2018-12-16 11:44:41', '2018-12-16 11:44:41', '2019-12-16 18:44:41'),
 ('abe3637b3d9fae13817dd8c5704aa8452f3c43e262087a57a351ff83d96735be048a36b2d124cbc4', 2, 1, 'nApp', '[]', 0, '2018-12-25 09:36:36', '2018-12-25 09:36:36', '2019-12-25 16:36:36'),
+('adb6e1a8dc2b4e855d1428862730443bb4e1f02a2291b43a71ee1a886f8d6a3739c991860db854f0', 2, 1, 'nApp', '[]', 0, '2019-01-22 18:07:29', '2019-01-22 18:07:29', '2020-01-23 01:07:29'),
 ('b0ddd076e5113f1d29c325c9ce4eb6afcaa8ee9886bd9830720a4cf88729379837cae6cf092bc0d8', 7, 1, 'nApp', '[]', 0, '2018-12-03 11:42:18', '2018-12-03 11:42:18', '2019-12-03 18:42:18'),
 ('b225eb7159d57c0b423aae044046583b27769a00cbb8ca205276706274dd2ef4bf800a0fd01bdb79', 1, 1, 'nApp', '[]', 0, '2018-12-04 01:10:32', '2018-12-04 01:10:32', '2019-12-04 08:10:32'),
 ('b42c81137c554c457065bf04c2aeca36954671fc9cb6000f8be626d1d180277ff21ceaf62a9c7aee', 2, 1, 'nApp', '[]', 0, '2018-12-24 11:13:00', '2018-12-24 11:13:00', '2019-12-24 18:13:00'),
@@ -413,11 +417,11 @@ INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes
 ('d46cd14972529da85b8e09ba8ce1655066a39f5d699173d19e33191ced665c68359027facaf7bb3c', 7, 1, 'nApp', '[]', 0, '2018-12-16 09:52:07', '2018-12-16 09:52:07', '2019-12-16 16:52:07'),
 ('d5d012dd56d4c0ed58874e7928f776eedca0a274545cb6f03a6a5e524deac59beafa4f81ae8f8fd5', 7, 1, 'nApp', '[]', 0, '2018-12-16 08:25:33', '2018-12-16 08:25:33', '2019-12-16 15:25:33'),
 ('d62771ebca9d7662190f4d589f28aaa7fca7b71783133392a869a4d9942d2291e715e2ebb8c8f397', 7, 1, 'nApp', '[]', 0, '2018-12-22 11:41:57', '2018-12-22 11:41:57', '2019-12-22 18:41:57'),
-('d62d90f641a84710224295d3a1b35111e300c29e82acb1f470c87e27b543f87af74582e422847178', 2, 1, 'nApp', '[]', 0, '2018-12-25 12:36:26', '2018-12-25 12:36:26', '2019-12-25 19:36:26'),
+('d62d90f641a84710224295d3a1b35111e300c29e82acb1f470c87e27b543f87af74582e422847178', 2, 1, 'nApp', '[]', 0, '2018-12-25 12:36:26', '2018-12-25 12:36:26', '2019-12-25 19:36:26');
+INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
 ('d6d7fef408d6992f406a1ac7d2fdc2ea48ac292af45126638296de430c76d858ca8642d0902d0aac', 7, 1, 'nApp', '[]', 0, '2018-12-16 07:43:20', '2018-12-16 07:43:20', '2019-12-16 14:43:20'),
 ('d6df0dab5906b4edd6d11cf433acdb9e230dd9371b92194b611e4182d555a763e412a12c701bd828', 2, 1, 'nApp', '[]', 0, '2018-12-25 12:57:28', '2018-12-25 12:57:28', '2019-12-25 19:57:28'),
-('d7404e59e6e29956deea71dae2b7d2ddba95d7d56fc6026874e699e30867f770ed1fdbaff96d15e2', 2, 1, 'nApp', '[]', 0, '2018-12-24 08:07:52', '2018-12-24 08:07:52', '2019-12-24 15:07:52');
-INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
+('d7404e59e6e29956deea71dae2b7d2ddba95d7d56fc6026874e699e30867f770ed1fdbaff96d15e2', 2, 1, 'nApp', '[]', 0, '2018-12-24 08:07:52', '2018-12-24 08:07:52', '2019-12-24 15:07:52'),
 ('d92b3824336fbe9dcb7c5cfc24e02fe2d04362f03fe10c01a5a9cc0aad42d7263f25b3f1f7dc9361', 7, 1, 'nApp', '[]', 0, '2018-12-04 01:29:02', '2018-12-04 01:29:02', '2019-12-04 08:29:02'),
 ('d9911da32b2bb93300cb55ad8954ac8eb22715be545fdd4067242e487ed86f2871d03b169a5b0568', 7, 1, 'nApp', '[]', 0, '2018-12-24 00:23:01', '2018-12-24 00:23:01', '2019-12-24 07:23:01'),
 ('d9e0eb22e6d46f50e19d3171704190adc3de61be0b1eaec916ee3dfb431ac8f03052f182f48eb9c2', 4, 1, 'nApp', '[]', 0, '2018-12-16 08:36:07', '2018-12-16 08:36:07', '2019-12-16 15:36:07'),
@@ -568,6 +572,7 @@ CREATE TABLE `projects` (
   `client` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `project_manager` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `qrcode` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `start_at` date DEFAULT NULL,
   `ended_at` date DEFAULT NULL,
   `deadline_at` date DEFAULT NULL,
@@ -579,11 +584,11 @@ CREATE TABLE `projects` (
 -- Dumping data for table `projects`
 --
 
-INSERT INTO `projects` (`id_project`, `name`, `deskripsi`, `client`, `project_manager`, `image`, `start_at`, `ended_at`, `deadline_at`, `status`, `price`) VALUES
-(1, 'Rabbani Landing Page', 'Project Rabbani. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Rabbani', '2', 'rabbani.jpg', '2018-12-14', NULL, '2018-12-28', 0, 0),
-(2, 'Ardan Radio Landing Page', 'Project Ardan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Ardan Group', '5', 'ardan.jpg', '2018-12-16', NULL, '2018-12-27', 0, 0),
-(3, 'Telkomsel', 'Project Telkomsel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Telkomsel Indonesia', '2', 'telkomsel.jpg', '2018-12-13', NULL, '2018-12-22', 0, 0),
-(4, 'Toyota App', 'Project Toyota. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Toyota Group', '7', 'toyota.jpg', '2018-12-17', NULL, '2018-12-31', 0, 0);
+INSERT INTO `projects` (`id_project`, `name`, `deskripsi`, `client`, `project_manager`, `image`, `qrcode`, `start_at`, `ended_at`, `deadline_at`, `status`, `price`) VALUES
+(1, 'Rabbani Landing Page', 'Project Rabbani. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Rabbani', '2', 'rabbani.jpg', '1.png', '2018-12-14', NULL, '2018-12-28', 0, 0),
+(2, 'Ardan Radio Landing Page', 'Project Ardan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Ardan Group', '5', 'ardan.jpg', '2.png', '2018-12-16', NULL, '2018-12-27', 0, 0),
+(3, 'Telkomsel', 'Project Telkomsel. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Telkomsel Indonesia', '2', 'telkomsel.jpg', '3.png', '2018-12-13', NULL, '2018-12-22', 0, 0),
+(4, 'Toyota App', 'Project Toyota. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id volutpat quam, viverra porttitor nunc. Phasellus sodales, tortor ac laoreet mollis, lectus purus euismod erat, sit amet faucibus diam magna nec lectus. Donec at nulla et mauris ullamcorper rutrum sed vel ipsum. Vivamus in lacinia felis.', 'PT. Toyota Group', '7', 'toyota.jpg', '4.png', '2018-12-17', NULL, '2018-12-31', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -666,7 +671,6 @@ CREATE TABLE `project_structure_staff` (
 INSERT INTO `project_structure_staff` (`id_project_structure`, `staff`) VALUES
 (1, '2'),
 (1, '3'),
-(1, '6'),
 (2, '1'),
 (3, '4'),
 (3, '5'),
